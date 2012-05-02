@@ -210,8 +210,10 @@ function SignaturePad (selector, options) {
     previous.x = null
     previous.y = null
 
-    if (output.length > 0)
+    if (output.length > 0) {
       $(settings.output, context).val(JSON.stringify(output))
+      onOutputChange()
+    }
   }
 
   /**
@@ -252,6 +254,7 @@ function SignaturePad (selector, options) {
 
     $(settings.output, context).val('')
     output = []
+    onOutputChange()
   }
 
   /**
@@ -460,6 +463,18 @@ function SignaturePad (selector, options) {
   }
 
   /**
+   * Calls settings.onOutputChange callback if defined.
+   * The signature is passed as an argument as a Js array.
+   *
+   * @private
+   */
+  function onOutputChange () {
+    if (settings.onOutputChange && typeof settings.onOutputChange === 'function') {
+      settings.onOutputChange(output)
+    }
+  }
+
+  /**
    * Validates the form to confirm a name was typed in the field
    * If drawOnly also confirms that the user drew a signature
    *
@@ -619,8 +634,10 @@ function SignaturePad (selector, options) {
 
       drawSignature(paths, canvasContext, true)
 
-      if ($(settings.output, context).length > 0)
+      if ($(settings.output, context).length > 0) {
         $(settings.output, context).val(JSON.stringify(output))
+        onOutputChange()
+      }
     }
 
     /**
@@ -735,5 +752,6 @@ $.fn.signaturePad.defaults = {
   , errorMessageDraw: 'Please sign the document' // The error message displayed when drawOnly and no signature is drawn
   , onBeforeValidate: null // Pass a callback to be used instead of the built-in function
   , onFormError: null // Pass a callback to be used instead of the built-in function
+  , onOutputChange: null // Pass a callback to be notified output changes (the signature is passed as an argument as a Js array)
 }
 }(jQuery))
