@@ -106,6 +106,17 @@ function SignaturePad (selector, options) {
    */
   , output = []
 
+
+  /**
+   * Holds the previous ouput array length
+   * Used to avoid calling onOutputChange callback twice with the same output value
+   *
+   * @private
+   *
+   * @type {Number}
+   */
+  , previousOutputLength = 0
+
   /**
    * Stores a timeout for when the mouse leaves the canvas
    * If the mouse has left the canvas for a specific amount of time
@@ -470,7 +481,10 @@ function SignaturePad (selector, options) {
    */
   function onOutputChange () {
     if (settings.onOutputChange && typeof settings.onOutputChange === 'function') {
-      settings.onOutputChange(output)
+      if (previousOutputLength !== output.length) {
+        previousOutputLength = output.length
+        settings.onOutputChange(output)
+      }
     }
   }
 
