@@ -162,6 +162,8 @@
 
 .pad {
   position: relative;
+  /** disable default touch actions on msIE */
+  -ms-touch-action: none;
 }
 
 .current .pad {
